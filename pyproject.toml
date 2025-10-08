@@ -7,7 +7,7 @@ name = "annobel"
 version = "0.0.1"
 description = "Automatic + manual YOLO bounding box annotation tool (GUI + console)"
 readme = "README.md"
-authors = [{name = "Your Name", email = "you@example.com"}]
+authors = [{name = "Sayali Dongre", email = "sayalidongre25@gmail.com"}]
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
 classifiers = [
