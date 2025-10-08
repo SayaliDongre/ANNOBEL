@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Repository to publish to (testpypi|pypi)"
+        description: "Automatic + manual YOLO-format bounding box annotation tool"
         required: true
         default: testpypi
   push:
