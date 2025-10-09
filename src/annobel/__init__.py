@@ -2,4 +2,4 @@
 from .main import main, run  # noqa: F401
 
 __all__ = ["main", "run"]
-__version__ = "0.1.0"
+__version__ = "0.0.2"
