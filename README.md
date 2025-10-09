@@ -121,7 +121,7 @@ data privacy regulations.
 5. Submit PR
 
 ## Versioning / Changelog
-- 0.0.1: Initial packaged release (renamed to annobel)
+- 0.0.2: Initial packaged release (renamed to annobel)
 
 ## Roadmap Ideas
 - Export to COCO format
