@@ -3,7 +3,7 @@
 Automatic + manual YOLO-format bounding box annotation tool with a Tkinter GUI
 (editor) and console fallback.
 
-> Version: 0.0.1 (Alpha)
+> Version: 0.0.2 (Alpha)
 
 ## Overview
 `annobel` streamlines creating and refining object detection datasets. It
