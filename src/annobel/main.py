@@ -17,7 +17,7 @@ def run(
     classes_file: str = "",
     conf: float = 0.25,
     open_editor_after_detect: bool = True,
-    write_empty_detection_files: bool = False,
+    write_empty_detection_files: bool = True,  # default changed to True in 0.0.3
     classes_filter_ids: Optional[List[int]] = None,
     force_mode_dialog: bool = False,
 ):
