@@ -22,7 +22,7 @@ CONFIG = {
     "classes_file": "",
     "conf": 0.25,
     "open_editor_after_detect": True,
-    "write_empty_detection_files": False,
+    "write_empty_detection_files": True,  # 0.0.3: now True by default to ensure 1:1 image:label mapping
     "display_max_width": 1000,
     "display_max_height": 800,
     "force_mode_dialog": True,
@@ -346,7 +346,7 @@ def run_detection(model_path: str,
         return
     ensure_dir(labels_dir)
     write_empty=bool(CONFIG.get("write_empty_detection_files"))
-    print(f"[AUTO] Images: {len(imgs)} | Classes: {sorted(requested) if classes_filter_ids else 'ALL'}")
+    print(f"[AUTO] Images: {len(imgs)} | Classes: {sorted(requested) if classes_filter_ids else 'ALL'} | Empty label files: {'ON' if write_empty else 'OFF'}")
     for i,img_path in enumerate(imgs,1):
         res=model.predict(source=str(img_path), conf=conf, verbose=False)[0]
         lines=[]
@@ -358,7 +358,9 @@ def run_detection(model_path: str,
                     lines.append(f"{int(cid)} {xc:.6f} {yc:.6f} {w:.6f} {h:.6f}")
         out=labels_dir / f"{img_path.stem}.txt"
         if lines: out.write_text("\n".join(lines))
-        elif write_empty: out.write_text("")
+        elif write_empty:  # 0.0.3 explicit creation path
+            if not out.exists():
+                out.write_text("")
         if i % 10 == 0 or i <= 5 or i == len(imgs):
             print(f"[AUTO] {i}/{len(imgs)} {img_path.name} -> {len(lines)} boxes")
     print(f"[AUTO] Done in {time.time()-t0:.2f}s")
