@@ -3,7 +3,7 @@
 Automatic + manual YOLO-format bounding box annotation tool with a Tkinter GUI
 (editor) and console fallback.
 
-> Version: 0.0.2 (Alpha)
+> Version: 0.0.3 (Alpha)
 
 ## Overview
 `annobel` streamlines creating and refining object detection datasets. It
@@ -54,6 +54,7 @@ run(
     mode="auto",                 # or "manual"
     model_path="yolov8n.pt",      # only needed for auto mode
     conf=0.25,
+    write_empty_detection_files=True,  # 0.0.3 default now ensures 1:1 images:labels
     classes_filter_ids=[0, 2],    # optional subset
 )
 ```
@@ -121,15 +122,53 @@ data privacy regulations.
 5. Submit PR
 
 ## Versioning / Changelog
+- 0.0.3: Create empty label .txt for images with zero detections (default on). Added `write_empty_detection_files=True` default. Run progress line now shows whether empty label writing is ON. This ensures a strict 1:1 image:label mapping and prevents silent negatives being skipped. To restore previous behavior pass `write_empty_detection_files=False` to `run()`.
 - 0.0.2: Initial packaged release (renamed to annobel)
 
-## Roadmap Ideas
-- Export to COCO format
-- Integrated image augmentation preview
-- Polygon / segmentation support
-- Multi-threaded batch detection
-- Custom hotkey configuration
-- Dark / light UI themes
+### Upgrading Notes (0.0.2 -> 0.0.3)
+If you previously generated datasets with missing label files for negative images, you can retroactively create empty files:
+```bash
+python - <<'PY'
+from pathlib import Path
+images=Path('path/to/images')
+labels=Path('path/to/labels')
+labels.mkdir(exist_ok=True, parents=True)
+img_exts={'.jpg','.jpeg','.png','.bmp','.tif','.tiff','.webp'}
+existing={p.stem for p in labels.glob('*.txt') if p.name!='classes.txt'}
+created=0
+for img in images.iterdir():
+    if img.is_file() and img.suffix.lower() in img_exts and img.stem not in existing:
+        (labels/f"{img.stem}.txt").write_text('')
+        created+=1
+print('Created empty label files:', created)
+PY
+```
+
+### Git Version Management
+Recommended workflow to preserve 0.0.2 and introduce 0.0.3:
+1. Commit current 0.0.2 state (if not already):
+   ```bash
+   git add . && git commit -m "chore: finalize 0.0.2 release"
+   git tag -a v0.0.2 -m "annobel 0.0.2"
+   ```
+2. Apply the 0.0.3 changes (already done in this repo), then:
+   ```bash
+   git add . && git commit -m "feat: 0.0.3 default empty label file support"
+   git tag -a v0.0.3 -m "annobel 0.0.3"
+   git push origin main --tags
+   ```
+3. To create a maintenance branch for 0.0.2 (optional):
+   ```bash
+   git branch release/0.0.2 v0.0.2
+   git push origin release/0.0.2
+   ```
+4. If you need a hotfix for 0.0.2 later: branch from `release/0.0.2`, bump version (e.g. 0.0.2.post1), tag, and publish.
+
+To install a specific version for reproducibility:
+```bash
+pip install annobel==0.0.2   # old behavior (no auto empty files)
+pip install annobel==0.0.3   # new behavior
+```
 
 ## Security / Privacy
 Images are processed locally. No images or labels are uploaded by this package.
